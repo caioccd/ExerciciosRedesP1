@@ -1,10 +1,8 @@
 \documentclass{article}
+
+\usepackage[brazilian]{babel}
 \usepackage[utf8]{inputenc}
-
-\title{Solução Redes}
-\author{Caio César Carvalho Dias}
-\date{4 de Outubro de 2015}
-
+\usepackage[T1]{fontenc}
 \usepackage{units}
 \usepackage{enumerate}
 \usepackage{amsmath}
@@ -12,11 +10,15 @@
 \usepackage{scrextend}
 \usepackage{indentfirst}
 
+\title{Solução Redes}
+\author{Caio César Carvalho Dias}
+\date{\today}
+
 \begin{document}
 
 \maketitle
 
-\section*{Atraso}
+\section*{Atrasoooo}
 \begin{enumerate}
 \item 
 Considere um hospedeiro $A$ enviando um único pacote de tamanho $\unit[L]{bytes}$ para o hospedeiro $B$. $A$ e $B$ encontram-se a uma distância de $\unit[25]{km}$ e estão conectados por meio de $5$ enlaces de $\unit[5]{km}$ cada, nos quais a velocidade de propagação do sinal é de $\unitfrac[2.5 \times 10^8]{m}{s}$, totalizando $4$ roteadores no caminho. Todos os enlaces tem capacidade de transmissão de $\unitfrac[10^6]{B}{s}$ ($\approx \unitfrac[8]{mB}{s}$). Todos os roteadores, bem como hospedeiros, demoram $\unit[10]{\mu s}$ para processar o pacote. Considere que $A$ é o único hospedeiro enviando pacotes pela rede no momento e que a mesma não está congestionada, não havendo atraso de enfileiramento.
@@ -103,7 +105,7 @@ L1 & = 1061.25
 \item É possível que um protocolo $X$, da camada $A$ da pilha de protocolos da Internet, realize transferência confiável de dados usando um protocolo não-confiável $Y$ da camada $B$ imediatamente inferior? Justifique.
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
-% SOLUÇÃO AQUI!
+Sim. Um protocolo pode usar inúmeras técnicas para garantir que uma mensagem seja enviada com sucesso de um ponto a outro. Tais técnicas são constítuidas por identificação de erros, reenvio de mensagens, confirmações de recebimento, etc. O TCP, por exemplo, é um protocolo de transferência de dados confiável sobre uma camada de rede fim-a-fim não confiável (IP).
 \end{addmargin}
 
 \item Quanto à comutação por circuitos ou por pacotes:
@@ -111,30 +113,31 @@ L1 & = 1061.25
 \item Explique o funcionamento de ambas (não esqueça de falar dos recursos e do atraso de transmissão).
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
-% SOLUÇÃO AQUI!
+Em redes de comutação por circuitos, os recursos necessários ao longo de um caminho (buffers, taxa de transmissão de enlaces) para prover comunicação entre os sistemas finais são reservados pelo período da sessão de comunicação. Em redes de comutação de pacotes, esses recursos não são reservados; as mensagens de uma sessão usam os recursos por demanda e, como consequência, poderão ter de esperar para conseguir acesso a um enlace de comunicação.
+\par Devido ao fato da comutação por circuitos utilizar um circuito fechado, seus atrasos de transmissão são invariáveis e prevísiveis. No entanto, a comutação por pacotes não precisa gastar tempo ``fechando o circuito''.
 \end{addmargin}
 
 \item Contraste a maior vantagem de cada uma comparada com a outra.
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
-% SOLUÇÃO AQUI!
+A comutação por circuitos é mais adequada para serviços de tempo real, pois seus atrasos fim-a-fim são invariáveis e prevísiveis. Já a comutação por pacotes oferece melhor compartilhamento de largura de banda que a comutação de circuitos e sua implementação é mais simples, mais eficiente e mais barata que a implementação de comutação de circuitos.
 \end{addmargin}
 
 \item Dê um exemplo de aplicação para a qual a comutação por circuitos é mais adequada e um para a qual a por pacotes é preferível.
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
-% SOLUÇÃO AQUI!
+A comutação por circuitos é mais adequada para chamadas telefônicas e a comutação por pacotes é mais adequada para comunicações com a internet.
 \end{addmargin}
 
 \end{enumerate}
 
-\item Mostre um algoritmo (usando máquina de estados ou pseudo-código) para um remetente realizando entrega confiável sobre IP e utilizando Go-Back-N com uma janela de tamanho fixo de 5 pacotes, um único timer e retransmissão rápida (ou seja, ao receber o terceiro ACK com o mesmo número de sequência o remetente reenvia os pacotes necessários). [Podia ser repetição seletiva ao invés de GBN, e controle de fluxo ao invés de retransmissão rápida.]
+\item Mostre um algoritmo (usando máquina de estados ou pseudo-código) para um remetente realizando entrega confiável sobre IP e utilizando Go-Back-N com uma janela de tamanho fixo de $5$ pacotes, um único timer e retransmissão rápida (ou seja, ao receber o terceiro ACK com o mesmo número de sequência o remetente reenvia os pacotes necessários). [Podia ser repetição seletiva ao invés de GBN, e controle de fluxo ao invés de retransmissão rápida.]
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
 % SOLUÇÃO AQUI!
 \end{addmargin}
 
-\item Considere dois hosts A e B que estabelecem uma conexão TCP para troca de dados com RTT=100ms. O host A envia 8000 bytes para B, em pacotes de no máximo 2000 bytes a cada 50ms (o primeiro desses pacotes têm número de sequência igual a 100 e número de ACK igual a 50). A e B tem buffers de recepção de 6000 bytes que inicialmente estão vazios (rwnd = 6000). A camada de aplicação de B retira no máximo 1500 bytes desse buffer a cada 150ms (os primeiros 1500 bytes são retirado imediatamente quando chegam, antes do envio do primeiro ACK, e os próximos 1500 só 150ms depois). Para eventos que acontecem no mesmo instante, considere que os primeiro os dados são entregues à aplicação, depois os hosts tratam as mensagens recebidas (dados e ACKs) e só depois enviam suas mensagens, os ACKs nem mesmo aparentam ocupar o buffer de recepção de A. Mostre as trocas de mensagem entre A e B para que A possa enviar todos os 8000 bytes, indicando claramente em cada mensagem os números de sequência e de ACK, o tamanho de rwnd e a quantidade de dados que está sendo transmitida. Recomendo indicar também quantos dados estão no buffer de recepção de B, quando são retirados e a quantidade de dados que A enviou e para os quais ainda não recebeu ACK.
+\item Considere dois hosts $A$ e $B$ que estabelecem uma conexão TCP para troca de dados com $RTT=\unit[100]{ms}$. O host A envia $\unit[8000]{bytes}$ para B, em pacotes de no máximo $\unit[2000]{bytes}$ a cada $\unit[50]{ms}$ (o primeiro desses pacotes têm número de sequência igual a $100$ e número de ACK igual a $50$). $A$ e $B$ tem buffers de recepção de $\unit[6000]{bytes}$ que inicialmente estão vazios ($rwnd = 6000$). A camada de aplicação de $B$ retira no máximo $\unit[1500]{bytes}$ desse buffer a cada $\unit[150]{ms}$ (os primeiros $\unit[1500]{bytes}$ são retirado imediatamente quando chegam, antes do envio do primeiro ACK, e os próximos $\unit[1500]{bytes}$ só $\unit[150]{ms}$ depois). Para eventos que acontecem no mesmo instante, considere que os primeiro os dados são entregues à aplicação, depois os hosts tratam as mensagens recebidas (dados e ACKs) e só depois enviam suas mensagens, os ACKs nem mesmo aparentam ocupar o buffer de recepção de $A$. Mostre as trocas de mensagem entre $A$ e $B$ para que $A$ possa enviar todos os $\unit[8000]{bytes}$, indicando claramente em cada mensagem os números de sequência e de ACK, o tamanho de rwnd e a quantidade de dados que está sendo transmitida. Recomendo indicar também quantos dados estão no buffer de recepção de $B$, quando são retirados e a quantidade de dados que $A$ enviou e para os quais ainda não recebeu ACK.
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
 % SOLUÇÃO AQUI!
