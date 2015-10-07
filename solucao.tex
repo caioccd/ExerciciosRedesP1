@@ -8,7 +8,30 @@
 \usepackage{amsmath}
 \usepackage{fullpage}
 \usepackage{scrextend}
-\usepackage{indentfirst}
+%\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{color}
+
+%\definecolor{dkgreen}{rgb}{0,0.6,0}
+%\definecolor{gray}{rgb}{0.5,0.5,0.5}
+%\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+%\lstset{frame=tb,
+%  language=Java,
+%  aboveskip=3mm,
+%  belowskip=3mm,
+%  showstringspaces=false,
+%  columns=flexible,
+%  basicstyle={\small\ttfamily},
+%  numbers=none,
+%  numberstyle=\tiny\color{gray},
+%  keywordstyle=\color{blue},
+%  commentstyle=\color{dkgreen},
+%  stringstyle=\color{mauve},
+%  breaklines=true,
+%  breakatwhitespace=true,
+%  tabsize=3
+%}
 
 \title{Solução Redes}
 \author{Caio César Carvalho Dias}
@@ -18,7 +41,7 @@
 
 \maketitle
 
-\section*{Atrasoooo}
+\section*{Atraso}
 \begin{enumerate}
 \item 
 Considere um hospedeiro $A$ enviando um único pacote de tamanho $\unit[L]{bytes}$ para o hospedeiro $B$. $A$ e $B$ encontram-se a uma distância de $\unit[25]{km}$ e estão conectados por meio de $5$ enlaces de $\unit[5]{km}$ cada, nos quais a velocidade de propagação do sinal é de $\unitfrac[2.5 \times 10^8]{m}{s}$, totalizando $4$ roteadores no caminho. Todos os enlaces tem capacidade de transmissão de $\unitfrac[10^6]{B}{s}$ ($\approx \unitfrac[8]{mB}{s}$). Todos os roteadores, bem como hospedeiros, demoram $\unit[10]{\mu s}$ para processar o pacote. Considere que $A$ é o único hospedeiro enviando pacotes pela rede no momento e que a mesma não está congestionada, não havendo atraso de enfileiramento.
@@ -36,7 +59,7 @@ Neste caso temos
 \begin{equation} \label{eq1}
 \begin{split}
 N & = 4 \\
-d_{proc} & = \unit[10]{\mu s} = \unit[10^{-6}]{s}\\
+d_{proc} & = \unit[10]{\mu s} = \unit[10 \times 10^{-6}]{s}\\
 d_{prop} & = \frac{\unit[5]{km}}{\unitfrac[2.5 \times 10^8]{m}{s}} = \unit[20 \times 10^{-6}]{s}\\
 d_{trans} & = \frac{\unit[L]{B}}{\unitfrac[10^6]{B}{s}} = \unit[L \times 10^{-6}]{s}.
 \end{split}
@@ -46,8 +69,8 @@ Logo, o atraso em função de $L$ dá-se por
 
 \begin{equation} \label{eq2}
 \begin{split}
-d_{fim-a-fim}(L) & = (4 + 1)(\unit[10^{-6}]{s} + \unit[20 \times 10^{-6}]{s} + \unit[L \times 10^{-6}]{s}) \\
-& = \unit[(21 + L)(5 \times 10^{-6})]{s}.
+d_{fim-a-fim}(L) & = (4 + 1)(\unit[10 \times 10^{-6}]{s} + \unit[20 \times 10^{-6}]{s} + \unit[L \times 10^{-6}]{s}) \\
+& = \unit[(30 + L)(5 \times 10^{-6})]{s}.
 \end{split}
 \end{equation}
 
@@ -89,8 +112,8 @@ d_{fim-a-fim}(L) & = (4 + 1)(\unit[0]{s} + \unit[20 \times 10^{-6}]{s}) + \unit[
 \par \textbf{Solução:}
 \begin{equation} \label{eq2}
 \begin{split}
-\unit[(21 + L1)(5 \times 10^{-6})]{s} & = \unit[(4350 + L1) 10^{-6}]{s}\\
-L1 & = 1061.25
+\unit[(30 + L1)(5 \times 10^{-6})]{s} & = \unit[(4350 + L1) 10^{-6}]{s}\\
+L1 & = 1050
 \end{split}
 \end{equation}
  
@@ -134,7 +157,27 @@ A comutação por circuitos é mais adequada para chamadas telefônicas e a comu
 \item Mostre um algoritmo (usando máquina de estados ou pseudo-código) para um remetente realizando entrega confiável sobre IP e utilizando Go-Back-N com uma janela de tamanho fixo de $5$ pacotes, um único timer e retransmissão rápida (ou seja, ao receber o terceiro ACK com o mesmo número de sequência o remetente reenvia os pacotes necessários). [Podia ser repetição seletiva ao invés de GBN, e controle de fluxo ao invés de retransmissão rápida.]
 \begin{addmargin}[0.5in]{0.5in}
 \par \textbf{Solução:}
-% SOLUÇÃO AQUI!
+%\begin{lstlisting}
+%janela = 5;
+%base = 0;
+%while (true) {
+%	if timeout() {
+%		reinicia_timer();
+%		for (i = base; i < (base + janela); i++) {
+%			envia_pacote(i);
+%		}
+%	}
+%
+%	if ack_recebido() {
+%		diff = get_ack_num() - base;
+%		for (i = 0; i < diff; i++) {
+%			base = base + 1;
+%			envia_pacote(base + janela - 1);
+%		}
+%		reinicia_timer();
+%	}
+%}
+%\end{lstlisting}
 \end{addmargin}
 
 \item Considere dois hosts $A$ e $B$ que estabelecem uma conexão TCP para troca de dados com $RTT=\unit[100]{ms}$. O host A envia $\unit[8000]{bytes}$ para B, em pacotes de no máximo $\unit[2000]{bytes}$ a cada $\unit[50]{ms}$ (o primeiro desses pacotes têm número de sequência igual a $100$ e número de ACK igual a $50$). $A$ e $B$ tem buffers de recepção de $\unit[6000]{bytes}$ que inicialmente estão vazios ($rwnd = 6000$). A camada de aplicação de $B$ retira no máximo $\unit[1500]{bytes}$ desse buffer a cada $\unit[150]{ms}$ (os primeiros $\unit[1500]{bytes}$ são retirado imediatamente quando chegam, antes do envio do primeiro ACK, e os próximos $\unit[1500]{bytes}$ só $\unit[150]{ms}$ depois). Para eventos que acontecem no mesmo instante, considere que os primeiro os dados são entregues à aplicação, depois os hosts tratam as mensagens recebidas (dados e ACKs) e só depois enviam suas mensagens, os ACKs nem mesmo aparentam ocupar o buffer de recepção de $A$. Mostre as trocas de mensagem entre $A$ e $B$ para que $A$ possa enviar todos os $\unit[8000]{bytes}$, indicando claramente em cada mensagem os números de sequência e de ACK, o tamanho de rwnd e a quantidade de dados que está sendo transmitida. Recomendo indicar também quantos dados estão no buffer de recepção de $B$, quando são retirados e a quantidade de dados que $A$ enviou e para os quais ainda não recebeu ACK.
